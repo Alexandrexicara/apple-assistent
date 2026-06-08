@@ -1,0 +1,72 @@
+{
+  "name": "apple-id-assistant",
+  "version": "1.0.0",
+  "description": "Assistente Inteligente de Recuperação e Suporte Apple ID",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "dev": "electron . --dev",
+    "test": "jest"
+  },
+  "keywords": [
+    "apple",
+    "icloud",
+    "recovery",
+    "support",
+    "electron"
+  ],
+  "author": "Bay Reset Tool",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^42.0.0",
+    "electron-builder": "^26.8.1",
+    "jest": "^29.7.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "electron-log": "^5.0.1",
+    "electron-updater": "^6.1.7",
+    "socket.io-client": "^4.7.4",
+    "uuid": "^9.0.1"
+  },
+  "build": {
+    "appId": "com.bayreset.appleidassistant",
+    "productName": "Apple ID Assistant",
+    "directories": {
+      "output": "../dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "assets/**/*",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Apple ID Assistant"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "bayreset",
+      "repo": "apple-id-assistant"
+    }
+  }
+}

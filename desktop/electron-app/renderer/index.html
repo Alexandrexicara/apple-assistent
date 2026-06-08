@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.bayreset.com;">
+    <title>Apple ID Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">
+                <svg viewBox="0 0 24 24" width="32" height="32">
+                    <path fill="currentColor" d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.21-1.96 1.08-3.11-1.05.05-2.31.72-3.06 1.64-.67.78-1.26 2.04-1.1 3.13 1.18.09 2.38-.62 3.08-1.66z"/>
+                </svg>
+                <span>Apple ID Assistant</span>
+            </div>
+            <div class="version" id="version"></div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Step 1: Welcome / Input -->
+            <section id="step-welcome" class="step active">
+                <div class="welcome-container">
+                    <h1>Assistente de Recuperação Apple ID</h1>
+                    <p class="subtitle">Plataforma profissional de suporte para recuperação de acesso a contas Apple</p>
+                    
+                    <div class="disclaimer-box">
+                        <strong>⚠️ Aviso Importante:</strong>
+                        <p>Este sistema é um assistente de suporte guiado. Não realizamos bypass ou desbloqueio ilegal de iCloud. Todas as recuperações seguem os processos oficiais da Apple.</p>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="apple-id-email">E-mail do Apple ID (opcional)</label>
+                        <input type="email" id="apple-id-email" placeholder="seu@email.com">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Tipo de Problema</label>
+                        <div class="problem-grid">
+                            <button class="problem-card" data-type="forgot-password">
+                                <span class="icon">🔑</span>
+                                <span class="label">Esqueci a Senha</span>
+                            </button>
+                            <button class="problem-card" data-type="two-factor">
+                                <span class="icon">🔐</span>
+                                <span class="label">Verificação em 2 Etapas</span>
+                            </button>
+                            <button class="problem-card" data-type="activation-lock">
+                                <span class="icon">📱</span>
+                                <span class="label">Bloqueio de Ativação</span>
+                            </button>
+                            <button class="problem-card" data-type="account-locked">
+                                <span class="icon">🔒</span>
+                                <span class="label">Conta Inacessível</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button id="btn-continue" class="btn-primary" disabled>Continuar</button>
+                </div>
+            </section>
+
+            <!-- Step 2: Consent -->
+            <section id="step-consent" class="step">
+                <div class="consent-container">
+                    <h2>Confirmação de Propriedade</h2>
+                    <p>Antes de prosseguir, precisamos confirmar algumas informações.</p>
+
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="consent-owner">
+                            <span class="checkmark"></span>
+                            <span class="text">Confirmo que sou o proprietário legítimo deste dispositivo/conta Apple ID</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="consent-legal">
+                            <span class="checkmark"></span>
+                            <span class="text">Declaro que não estou tentando acessar dispositivo de terceiros sem autorização</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="consent-terms">
+                            <span class="checkmark"></span>
+                            <span class="text">Aceito os termos de uso e política de privacidade</span>
+                        </label>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>📋 Seu IP e data/hora serão registrados:</strong>
+                        <span id="session-info"></span>
+                    </div>
+
+                    <div class="actions">
+                        <button id="btn-back-welcome" class="btn-secondary">Voltar</button>
+                        <button id="btn-confirm-consent" class="btn-primary" disabled>Confirmar e Prosseguir</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 3: Diagnosis -->
+            <section id="step-diagnosis" class="step">
+                <div class="diagnosis-container">
+                    <h2>Análise do Caso</h2>
+                    <p id="diagnosis-subtitle">Estamos analisando sua situação...</p>
+
+                    <div id="diagnosis-loading" class="loading-spinner">
+                        <div class="spinner"></div>
+                        <span>Analisando...</span>
+                    </div>
+
+                    <div id="diagnosis-result" class="diagnosis-result hidden">
+                        <div class="severity-badge" id="severity-badge">
+                            <span class="level"></span>
+                        </div>
+
+                        <div class="diagnosis-details">
+                            <h3>Diagnóstico:</h3>
+                            <p id="diagnosis-type"></p>
+                            
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <span class="label">Recuperável:</span>
+                                    <span class="value" id="recoverable-status"></span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Requer Suporte Apple:</span>
+                                    <span class="value" id="apple-support-status"></span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Tempo Estimado:</span>
+                                    <span class="value" id="estimated-time"></span>
+                                </div>
+                            </div>
+
+                            <h4>Passos Recomendados:</h4>
+                            <ol id="recovery-steps"></ol>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <button id="btn-back-consent" class="btn-secondary">Voltar</button>
+                        <button id="btn-start-recovery" class="btn-primary">Iniciar Recuperação</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 4: Recovery Flow -->
+            <section id="step-recovery" class="step">
+                <div class="recovery-container">
+                    <h2>Fluxo de Recuperação</h2>
+                    
+                    <div id="recovery-content">
+                        <!-- Conteúdo dinâmico baseado no tipo de problema -->
+                    </div>
+
+                    <div class="actions">
+                        <button id="btn-back-diagnosis" class="btn-secondary">Voltar</button>
+                        <button id="btn-view-dashboard" class="btn-primary">Ver Painel de Acompanhamento</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 5: Dashboard -->
+            <section id="step-dashboard" class="step">
+                <div class="dashboard-container">
+                    <h2>Painel de Acompanhamento</h2>
+                    
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card status-card">
+                            <h3>Status da Solicitação</h3>
+                            <div class="status-badge" id="request-status">Em Análise</div>
+                            <p class="status-description">Sua solicitação está sendo processada</p>
+                        </div>
+
+                        <div class="dashboard-card history-card">
+                            <h3>Histórico</h3>
+                            <ul id="history-list">
+                                <li>
+                                    <span class="time" id="history-start"></span>
+                                    <span class="action">Solicitação iniciada</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="dashboard-card support-card">
+                            <h3>Suporte</h3>
+                            <p>Precisa de ajuda adicional?</p>
+                            <button id="btn-contact-support" class="btn-secondary">Abrir Ticket</button>
+                        </div>
+
+                        <div class="dashboard-card resources-card">
+                            <h3>Links Úteis</h3>
+                            <ul class="link-list">
+                                <li><a href="#" data-url="https://iforgot.apple.com">iforgot.apple.com</a></li>
+                                <li><a href="#" data-url="https://support.apple.com">Suporte Apple</a></li>
+                                <li><a href="#" data-url="https://www.icloud.com/find">Encontrar iPhone</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <button id="btn-new-request" class="btn-primary">Nova Solicitação</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Admin Panel (opcional) -->
+            <section id="step-admin" class="step">
+                <div class="admin-container">
+                    <h2>Painel Administrativo</h2>
+                    <p>Acesso restrito a administradores.</p>
+                    
+                    <div class="login-form" id="admin-login">
+                        <div class="input-group">
+                            <label for="admin-email">E-mail</label>
+                            <input type="email" id="admin-email">
+                        </div>
+                        <div class="input-group">
+                            <label for="admin-password">Senha</label>
+                            <input type="password" id="admin-password">
+                        </div>
+                        <button id="btn-admin-login" class="btn-primary">Entrar</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>&copy; 2024 Bay Reset Tool. Todos os direitos reservados.</p>
+            <div class="footer-links">
+                <a href="#" id="link-terms">Termos de Uso</a>
+                <a href="#" id="link-privacy">Privacidade</a>
+                <a href="#" id="link-support">Suporte</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>

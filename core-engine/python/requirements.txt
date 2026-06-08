@@ -1,0 +1,26 @@
+# Apple ID Assistant - Core Engine Dependencies
+# Python 3.8+
+
+# Async
+asyncio>=3.4.3
+
+# API Bridge
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+
+# Data validation
+pydantic>=2.5.0
+
+# HTTP client
+httpx>=0.25.0
+
+# Utilities
+python-dateutil>=2.8.2
+uuid>=1.30
+
+# Logging
+structlog>=23.2.0
+
+# Testing (development)
+pytest>=7.4.0
+pytest-asyncio>=0.21.0

@@ -1,0 +1,12 @@
+{
+  "name": "apple-id-assistant",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node backend/src/app.js",
+    "build": "cd backend && npm install"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

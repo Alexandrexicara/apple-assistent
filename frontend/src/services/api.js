@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useStore } from '../store/useStore';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api/v1';
+const API_URL = process.env.REACT_APP_API_URL || (process.env.NODE_ENV === 'production' ? '/api/v1' : 'http://localhost:3000/api/v1');
 
 // Criar instância axios
 export const api = axios.create({

@@ -137,6 +137,27 @@ app.get('/api/v1', (req, res) => {
   });
 });
 
+// ==================== Frontend (Static Files) ====================
+
+const frontendBuildPath = path.join(__dirname, '../../frontend/build');
+app.use(express.static(frontendBuildPath));
+
+// SPA fallback - serve index.html para rotas do React
+app.get('*', (req, res, next) => {
+  // Se é uma rota de API, passar para o 404 handler
+  if (req.path.startsWith('/api/')) {
+    return next();
+  }
+  // Servir index.html para rotas do frontend
+  const indexPath = path.join(frontendBuildPath, 'index.html');
+  const fs = require('fs');
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    next();
+  }
+});
+
 // ==================== Tratamento de Erros ====================
 
 // 404 - Not Found
